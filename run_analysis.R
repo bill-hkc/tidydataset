@@ -30,9 +30,9 @@ names.select <- sub("BodyBody", "Body", names.select)
 # read data files in a dir, combine them to a data frame, 
 # and only return selected columns
 read.dir.data <- function(name) {
-  y <- read.table(paste0(name,"/y_",name,".txt"), nrows=nrows)
-  x <- read.table(paste0(name,"/X_",name,".txt"), nrows=nrows, colClasses=colClasses)
-  subject <- read.table(paste0(name,"/subject_",name,".txt"), nrows=nrows)
+  y <- read.table(file.path(name, paste0("y_",name,".txt")), nrows=nrows)
+  x <- read.table(file.path(name, paste0("X_",name,".txt")), nrows=nrows, colClasses=colClasses)
+  subject <- read.table(file.path(name, paste0("subject_",name,".txt")), nrows=nrows)
 
   df <- data.frame(y, subject, x)
   names(df) <- c("activity","subject",names.select)
@@ -51,7 +51,7 @@ activity_labels <- read.table("activity_labels.txt")
 df$activity <- factor(df$activity, levels=activity_labels$V1, labels=activity_labels$V2)
 
 
-#split the data frame by (subject,activitiy) combinatins, 
+#split the data frame by (activitiy,subject) combinatins, 
 # then calculate means of other variables to form the new tidy data set
 df.tidy <- ddply(df, .(activity, subject), function(x){colMeans(x[c(-1,-2)])})
 
